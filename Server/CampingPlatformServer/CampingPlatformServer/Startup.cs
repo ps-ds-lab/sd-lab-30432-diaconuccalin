@@ -34,6 +34,7 @@ namespace CampingPlatformServer
             services.AddScoped<IDataRepository<Location>, LocationManager>();
             services.AddScoped<IDataRepository<LocationDate>, LocationDateManager>();
             services.AddScoped<IDataRepository<LocationImage>, LocationImageManager>();
+            services.AddScoped<IDataRepository<Admin>, AdminManager>();
 
             services.AddControllers();
         }

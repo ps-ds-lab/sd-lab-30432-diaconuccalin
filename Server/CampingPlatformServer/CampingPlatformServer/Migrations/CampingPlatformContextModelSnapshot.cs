@@ -19,6 +19,34 @@ namespace CampingPlatformServer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("CampingPlatformServer.Model.Admin", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(60)")
+                        .HasMaxLength(60);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Admin");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("8db91ddd-1192-441a-8960-de2dc68704df"),
+                            Password = "securePassword",
+                            Username = "greatAdmin"
+                        });
+                });
+
             modelBuilder.Entity("CampingPlatformServer.Model.Guest", b =>
                 {
                     b.Property<Guid>("Id")

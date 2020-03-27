@@ -11,6 +11,13 @@ namespace CampingPlatformServer.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Admin>().HasData(new Admin
+            {
+                Id = Guid.Parse("8db91ddd-1192-441a-8960-de2dc68704df"),
+                Username = "greatAdmin",
+                Password = "securePassword"
+            });
+
             modelBuilder.Entity<Guest>().HasData(new Guest
             {
                 Id = Guid.Parse("99117ce4-f509-4f25-9213-08a1eb11cbd1"),
@@ -53,5 +60,6 @@ namespace CampingPlatformServer.Model
         public DbSet<Location> Locations { get; set; }
         public DbSet<LocationDate> LocationDates { get; set; }
         public DbSet<LocationImage> LocationImages { get; set; }
+        public DbSet<Admin> Admins { get; set; }
     }
 }

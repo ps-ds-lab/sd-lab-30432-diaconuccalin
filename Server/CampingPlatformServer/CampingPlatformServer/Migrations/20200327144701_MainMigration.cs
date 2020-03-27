@@ -3,10 +3,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CampingPlatformServer.Migrations
 {
-    public partial class CampingPlatformServerModelCampingPlatformContext : Migration
+    public partial class MainMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Admin",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Username = table.Column<string>(maxLength: 60, nullable: false),
+                    Password = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Admin", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Guest",
                 columns: table => new
@@ -133,6 +146,11 @@ namespace CampingPlatformServer.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Admin",
+                columns: new[] { "Id", "Password", "Username" },
+                values: new object[] { new Guid("8db91ddd-1192-441a-8960-de2dc68704df"), "securePassword", "greatAdmin" });
+
+            migrationBuilder.InsertData(
                 table: "Guest",
                 columns: new[] { "Id", "DateOfBirth", "Description", "Email", "FirstName", "LastName", "Password", "ProfilePictureLocation", "TelephoneNumber", "Username" },
                 values: new object[] { new Guid("99117ce4-f509-4f25-9213-08a1eb11cbd1"), new DateTime(1975, 10, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "user@one.com", "User", "One", "Password1", null, "+40749635568", "User1" });
@@ -140,12 +158,11 @@ namespace CampingPlatformServer.Migrations
             migrationBuilder.InsertData(
                 table: "Host",
                 columns: new[] { "Id", "DateOfBirth", "Email", "FirstName", "LastName", "Password", "ProfilePictureLocation", "TelephoneNumber", "Username" },
-                values: new object[] { new Guid("82e203d2-8dfc-408c-81fd-06ce41db478e"), new DateTime(1992, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "another.user@two.com", "Another User", "Two", "Password2", null, "+40749865768", "User2" });
-
-            migrationBuilder.InsertData(
-                table: "Host",
-                columns: new[] { "Id", "DateOfBirth", "Email", "FirstName", "LastName", "Password", "ProfilePictureLocation", "TelephoneNumber", "Username" },
-                values: new object[] { new Guid("6b4b958d-ea5c-4541-80f4-91e3779fb46a"), new DateTime(1963, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "lastUser@three.com", "Last User", "Three", "Password3", null, "+40749896568", "User3" });
+                values: new object[,]
+                {
+                    { new Guid("82e203d2-8dfc-408c-81fd-06ce41db478e"), new DateTime(1992, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "another.user@two.com", "Another User", "Two", "Password2", null, "+40749865768", "User2" },
+                    { new Guid("6b4b958d-ea5c-4541-80f4-91e3779fb46a"), new DateTime(1963, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "lastUser@three.com", "Last User", "Three", "Password3", null, "+40749896568", "User3" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_GuestRequest_GuestId",
@@ -175,6 +192,9 @@ namespace CampingPlatformServer.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Admin");
+
             migrationBuilder.DropTable(
                 name: "GuestRequest");
 
