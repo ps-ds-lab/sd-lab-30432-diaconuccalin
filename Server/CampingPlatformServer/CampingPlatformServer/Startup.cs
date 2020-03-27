@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using CampingPlatformServer.Model.Repository;
+using CampingPlatformServer.Model.DataManager;
 
 namespace CampingPlatformServer
 {
@@ -24,7 +26,14 @@ namespace CampingPlatformServer
         {
             services.ConfigureCors();
             services.ConfigureIISIntegration();
-            services.AddDbContext<GuestContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:CampingPlatformDB"]));
+            services.AddDbContext<CampingPlatformContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:CampingPlatformDB"]));
+
+            services.AddScoped<IDataRepository<Guest>, GuestManager>();
+            services.AddScoped<IDataRepository<GuestRequest>, GuestRequestManager>();
+            services.AddScoped<IDataRepository<Model.Host>, HostManager>();
+            services.AddScoped<IDataRepository<Location>, LocationManager>();
+            services.AddScoped<IDataRepository<LocationDate>, LocationDateManager>();
+            services.AddScoped<IDataRepository<LocationImage>, LocationImageManager>();
 
             services.AddControllers();
         }

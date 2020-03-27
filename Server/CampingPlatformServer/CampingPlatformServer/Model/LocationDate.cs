@@ -7,12 +7,25 @@ using System.Threading.Tasks;
 
 namespace CampingPlatformServer.Model
 {
+    [Table("LocationDate")]
     public class LocationDate
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long LocationDateId { get; set; }
-        public long LocationId { get; set; }
+        public Guid Id { get; set; }
+
+        [ForeignKey(nameof(Location))]
+        public Guid LocationId { get; set; }
+
+        public Location Location { get; set; }
+
         public DateTime Date { get; set; }
+
+        public void Copy(LocationDate locationDate)
+        {
+            this.LocationId = locationDate.LocationId;
+            this.Location = locationDate.Location;
+            this.Date = locationDate.Date;
+        }
     }
 }
