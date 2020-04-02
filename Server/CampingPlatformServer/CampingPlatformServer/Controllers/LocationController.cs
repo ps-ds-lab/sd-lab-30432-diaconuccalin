@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace CampingPlatformServer.Controllers
 {
-    [Route("api/Location")]
+    [Route("api/locations")]
     [ApiController]
     public class LocationController : ControllerBase
     {

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace CampingPlatformServer.Controllers
 {
-    [Route("api/LocationImage")]
+    [Route("api/locationImages")]
     [ApiController]
     public class LocationImageController : ControllerBase
     {
