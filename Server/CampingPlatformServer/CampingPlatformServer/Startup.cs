@@ -1,4 +1,4 @@
-using CampingPlatformServer.Extensions;
+﻿using CampingPlatformServer.Extensions;
 using CampingPlatformServer.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +9,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using CampingPlatformServer.Model.Repository;
 using CampingPlatformServer.Model.DataManager;
+using Microsoft.AspNetCore.Identity;
+using AutoMapper;
+using CampingPlatformServer.Factory;
 
 namespace CampingPlatformServer
 {
@@ -28,6 +31,11 @@ namespace CampingPlatformServer
             services.ConfigureIISIntegration();
             services.AddDbContext<CampingPlatformContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:CampingPlatformDB"]));
 
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<CampingPlatformContext>();
+
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddScoped<IDataRepository<Guest>, GuestManager>();
             services.AddScoped<IDataRepository<GuestRequest>, GuestRequestManager>();
             services.AddScoped<IDataRepository<Model.Host>, HostManager>();
@@ -36,7 +44,9 @@ namespace CampingPlatformServer
             services.AddScoped<IDataRepository<LocationImage>, LocationImageManager>();
             services.AddScoped<IDataRepository<Admin>, AdminManager>();
 
-            services.AddControllers();
+            services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomClaimsFactory>();
+
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +55,11 @@ namespace CampingPlatformServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
             app.UseHttpsRedirection();
@@ -59,11 +74,14 @@ namespace CampingPlatformServer
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

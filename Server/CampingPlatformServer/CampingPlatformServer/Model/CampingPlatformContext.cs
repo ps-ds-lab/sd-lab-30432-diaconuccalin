@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CampingPlatformServer.Configuration;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace CampingPlatformServer.Model
 {
-    public class CampingPlatformContext : DbContext
+    public class CampingPlatformContext : IdentityDbContext<User>
     {
         public CampingPlatformContext(DbContextOptions options)
             : base(options)
@@ -11,47 +14,9 @@ namespace CampingPlatformServer.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Admin>().HasData(new Admin
-            {
-                Id = Guid.Parse("8db91ddd-1192-441a-8960-de2dc68704df"),
-                Username = "greatAdmin",
-                Password = "securePassword"
-            });
+            base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Guest>().HasData(new Guest
-            {
-                Id = Guid.Parse("99117ce4-f509-4f25-9213-08a1eb11cbd1"),
-                Username = "User1",
-                Password = "Password1",
-                FirstName = "User",
-                LastName = "One",
-                DateOfBirth = new DateTime(1975, 10, 8),
-                TelephoneNumber = "+40749635568",
-                Email = "user@one.com"
-            });
-
-            modelBuilder.Entity<Host>().HasData(new Host
-            {
-                Id = Guid.Parse("82e203d2-8dfc-408c-81fd-06ce41db478e"),
-                Username = "User2",
-                Password = "Password2",
-                FirstName = "Another User",
-                LastName = "Two",
-                DateOfBirth = new DateTime(1992, 5, 1),
-                TelephoneNumber = "+40749865768",
-                Email = "another.user@two.com"
-            },
-            new Host
-            {
-                Id = Guid.Parse("6b4b958d-ea5c-4541-80f4-91e3779fb46a"),
-                Username = "User3",
-                Password = "Password3",
-                FirstName = "Last User",
-                LastName = "Three",
-                DateOfBirth = new DateTime(1963, 12, 12),
-                TelephoneNumber = "+40749896568",
-                Email = "lastUser@three.com"
-            });
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
 
         public DbSet<Guest> Guests { get; set; }

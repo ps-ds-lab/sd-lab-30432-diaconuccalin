@@ -1,92 +1,147 @@
-﻿using CampingPlatformServer.Model;
-using CampingPlatformServer.Model.Repository;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using CampingPlatformServer.Model;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace CampingPlatformServer.Controllers
 {
-    [Route("api/guests")]
-    [ApiController]
-    public class GuestController : ControllerBase
+    public class GuestController : Controller
     {
-        private readonly IDataRepository<Guest> _dataRepository;
+        private readonly CampingPlatformContext _context;
 
-        public GuestController(IDataRepository<Guest> dataRepository)
+        public GuestController(CampingPlatformContext context)
         {
-            _dataRepository = dataRepository;
+            _context = context;
         }
 
-        // GET: api/Guest
-        [HttpGet]
-        public IActionResult Get()
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<Guest> guests = _dataRepository.GetAll();
-            return Ok(guests);
+            var guests = await _context.Guests.ToListAsync();
+            return View(guests);
         }
 
-        // GET: api/Guest/5
-        [HttpGet("{id}", Name = "GetGuest")]
-        public IActionResult Get(Guid id)
+        [Authorize]
+        public async Task<IActionResult> Details(Guid? id)
         {
-            Guest guest = _dataRepository.Get(id);
-
-            if(guest == null)
+            if (id == null)
             {
-                return NotFound("The Guest record couldn't be found.");
+                return NotFound();
             }
 
-            return Ok(guest);
+            var guest = await _context.Guests
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (guest == null)
+            {
+                return NotFound();
+            }
+
+            return View(guest);
         }
 
-        // POST: api/Guest
+        [Authorize]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         [HttpPost]
-        public IActionResult Post([FromBody] Guest guest)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Username,Password,FirstName,LastName,DateOfBirth,TelephoneNumber,Email,ProfilePictureLocation,Description")] Guest guest)
         {
-            if(guest == null)
+            if (ModelState.IsValid)
             {
-                return BadRequest("Guest is null.");
+                _context.Add(guest);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-
-            _dataRepository.Add(guest);
-            return CreatedAtRoute(
-                "",
-                new { Id = guest.Id },
-                guest);
+            return View(guest);
         }
 
-        // PUT: api/Guest/5
-        [HttpPut("{id}")]
-        public IActionResult Put(Guid id, [FromBody] Guest guest)
+        [Authorize]
+        public async Task<IActionResult> Edit(Guid? id)
         {
-            if(guest == null)
+            if (id == null)
             {
-                return BadRequest("Guest is null.");
+                return NotFound();
             }
 
-            Guest guestToUpdate = _dataRepository.Get(id);
-            if(guestToUpdate == null)
+            var guest = await _context.Guests.FindAsync(id);
+            if (guest == null)
             {
-                return NotFound("The guest record couldn't be found.");
+                return NotFound();
             }
-
-            _dataRepository.Update(guestToUpdate, guest);
-            return NoContent();
+            return View(guest);
         }
 
-        // DELETE: api/Guest/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Username,Password,FirstName,LastName,DateOfBirth,TelephoneNumber,Email,ProfilePictureLocation,Description")] Guest guest)
         {
-            Guest guest = _dataRepository.Get(id);
-
-            if(guest == null)
+            if (id != guest.Id)
             {
-                return NotFound("The guest record couldn't be found.");
+                return NotFound();
             }
 
-            _dataRepository.Delete(guest);
-            return NoContent();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(guest);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!GuestExists(guest.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(guest);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Delete(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var guest = await _context.Guests
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (guest == null)
+            {
+                return NotFound();
+            }
+
+            return View(guest);
+        }
+
+        [Authorize]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var guest = await _context.Guests.FindAsync(id);
+            _context.Guests.Remove(guest);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool GuestExists(Guid id)
+        {
+            return _context.Guests.Any(e => e.Id == id);
         }
     }
 }
