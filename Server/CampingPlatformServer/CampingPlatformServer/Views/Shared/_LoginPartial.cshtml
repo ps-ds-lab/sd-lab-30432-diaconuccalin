@@ -7,7 +7,7 @@
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-controller="Home" asp-action="Index"
-                   title="Welcome">Welcome @User.Identity.Name!</a>
+                   title="Welcome">Welcome, @User.Claims.ToList().Where(c => c.Type == "firstname").Select(c => c.Value).SingleOrDefault()!</a>
             </li>
             <li class="nav-item">
                 <form class="form-inline" asp-controller="Account" asp-action="Logout">

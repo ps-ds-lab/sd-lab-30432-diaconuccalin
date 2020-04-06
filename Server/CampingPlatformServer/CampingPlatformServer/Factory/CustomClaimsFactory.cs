@@ -16,7 +16,8 @@ namespace CampingPlatformServer.Factory
         {
             var identity = await base.GenerateClaimsAsync(user);
 
-            //identity.AddClaim(new Claim("correspondingid", user.CorrespondingId));
+            identity.AddClaim(new Claim("firstname", user.FirstName));
+            identity.AddClaim(new Claim("lastname", user.LastName));
 
             return identity;
         }

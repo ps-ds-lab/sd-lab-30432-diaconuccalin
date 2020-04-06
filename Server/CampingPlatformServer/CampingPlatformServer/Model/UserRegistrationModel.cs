@@ -10,6 +10,12 @@ namespace CampingPlatformServer.Model
     {
         public Guid CorrespondingId;
 
+        [Required(ErrorMessage = "Full name is required.")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Full name is required.")]
+        public string LastName { get; set; }
+
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress]
         public string Email { get; set; }

@@ -25,6 +25,5 @@ namespace CampingPlatformServer.Model
         public DbSet<Location> Locations { get; set; }
         public DbSet<LocationDate> LocationDates { get; set; }
         public DbSet<LocationImage> LocationImages { get; set; }
-        public DbSet<Admin> Admins { get; set; }
     }
 }

@@ -50,7 +50,7 @@ namespace CampingPlatformServer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username,Password,FirstName,LastName,DateOfBirth,TelephoneNumber,Email,ProfilePictureLocation")] Host host)
+        public async Task<IActionResult> Create([Bind("Id,DateOfBirth,TelephoneNumber,Email,ProfilePictureLocation")] Host host)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +80,7 @@ namespace CampingPlatformServer.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Username,Password,FirstName,LastName,DateOfBirth,TelephoneNumber,Email,ProfilePictureLocation")] Host host)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,DateOfBirth,TelephoneNumber,Email,ProfilePictureLocation")] Host host)
         {
             if (id != host.Id)
             {
