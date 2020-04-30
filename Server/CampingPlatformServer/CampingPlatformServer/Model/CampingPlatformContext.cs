@@ -1,22 +1,46 @@
-﻿using CampingPlatformServer.Configuration;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace CampingPlatformServer.Model
 {
-    public class CampingPlatformContext : IdentityDbContext<User>
+    public class CampingPlatformContext : DbContext
     {
-        public CampingPlatformContext(DbContextOptions options)
+        protected readonly IConfiguration Configuration;
+        public CampingPlatformContext(DbContextOptions options, IConfiguration configuration)
             : base(options)
-        { }
+        {
+            Configuration = configuration;
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Admin>().HasData(new Admin
+            {
+                Id = Guid.Parse("8db91ddd-1192-441a-8960-de2dc68704df"),
+                Username = "greatAdmin",
+                Password = "securePassword"
+            });
 
-            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.Entity<Guest>().HasData(new Guest
+            {
+                Id = Guid.Parse("99117ce4-f509-4f25-9213-08a1eb11cbd1"),
+                DateOfBirth = new DateTime(1975, 10, 8),
+                TelephoneNumber = "+40749635568"
+            });
+
+            modelBuilder.Entity<Host>().HasData(new Host
+            {
+                Id = Guid.Parse("82e203d2-8dfc-408c-81fd-06ce41db478e"),
+                DateOfBirth = new DateTime(1992, 5, 1),
+                TelephoneNumber = "+40749865768"
+            },
+            new Host
+            {
+                Id = Guid.Parse("6b4b958d-ea5c-4541-80f4-91e3779fb46a"),
+                DateOfBirth = new DateTime(1963, 12, 12),
+                TelephoneNumber = "+40749896568"
+            });
         }
 
         public DbSet<Guest> Guests { get; set; }
@@ -25,5 +49,7 @@ namespace CampingPlatformServer.Model
         public DbSet<Location> Locations { get; set; }
         public DbSet<LocationDate> LocationDates { get; set; }
         public DbSet<LocationImage> LocationImages { get; set; }
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

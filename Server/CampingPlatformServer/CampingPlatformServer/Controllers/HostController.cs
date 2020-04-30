@@ -1,147 +1,92 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using CampingPlatformServer.Model;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+﻿using CampingPlatformServer.Model;
+using CampingPlatformServer.Model.Repository;
+using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace CampingPlatformServer.Controllers
 {
-    public class HostController : Controller
+    [Route("api/hosts")]
+    [ApiController]
+    public class HostController : ControllerBase
     {
-        private readonly CampingPlatformContext _context;
+        private readonly IDataRepository<Host> _dataRepository;
 
-        public HostController(CampingPlatformContext context)
+        public HostController(IDataRepository<Host> dataRepository)
         {
-            _context = context;
+            _dataRepository = dataRepository;
         }
 
-        [Authorize]
-        public async Task<IActionResult> Index()
+        // GET: api/Host
+        [HttpGet]
+        public IActionResult Get()
         {
-            var hosts = await _context.Hosts.ToListAsync();
-            return View(hosts);
+            IEnumerable<Host> hosts = _dataRepository.GetAll();
+            return Ok(hosts);
         }
 
-        [Authorize]
-        public async Task<IActionResult> Details(Guid? id)
+        // GET: api/Host/5
+        [HttpGet("{id}", Name = "GetHost")]
+        public IActionResult Get(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            Host host = _dataRepository.Get(id);
 
-            var host = await _context.Hosts
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (host == null)
             {
-                return NotFound();
+                return NotFound("The host record couldn't be found.");
             }
 
-            return View(host);
+            return Ok(host);
         }
 
-        [Authorize]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
+        // POST: api/Host
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DateOfBirth,TelephoneNumber,Email,ProfilePictureLocation")] Host host)
+        public IActionResult Post([FromBody] Host host)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(host);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(host);
-        }
-
-        [Authorize]
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var host = await _context.Hosts.FindAsync(id);
             if (host == null)
             {
-                return NotFound();
+                return BadRequest("Host is null.");
             }
-            return View(host);
+
+            _dataRepository.Add(host);
+            return CreatedAtRoute(
+                "",
+                new { Id = host.Id },
+                host);
         }
 
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,DateOfBirth,TelephoneNumber,Email,ProfilePictureLocation")] Host host)
+        // PUT: api/Host/5
+        [HttpPut("{id}")]
+        public IActionResult Put(Guid id, [FromBody] Host host)
         {
-            if (id != host.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(host);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!HostExists(host.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(host);
-        }
-
-        [Authorize]
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var host = await _context.Hosts
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (host == null)
             {
-                return NotFound();
+                return BadRequest("Host is null.");
             }
 
-            return View(host);
+            Host hostToUpdate = _dataRepository.Get(id);
+            if (hostToUpdate == null)
+            {
+                return NotFound("The host record couldn't be found.");
+            }
+
+            _dataRepository.Update(hostToUpdate, host);
+            return NoContent();
         }
 
-        [Authorize]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        // DELETE: api/Host/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
         {
-            var host = await _context.Hosts.FindAsync(id);
-            _context.Hosts.Remove(host);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            Host host = _dataRepository.Get(id);
 
-        private bool HostExists(Guid id)
-        {
-            return _context.Hosts.Any(e => e.Id == id);
+            if (host == null)
+            {
+                return NotFound("The host record couldn't be found.");
+            }
+
+            _dataRepository.Delete(host);
+            return NoContent();
         }
     }
 }

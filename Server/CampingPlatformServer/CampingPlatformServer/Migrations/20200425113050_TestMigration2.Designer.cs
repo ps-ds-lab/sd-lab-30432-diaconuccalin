@@ -4,14 +4,16 @@ using CampingPlatformServer.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CampingPlatformServer.Migrations
 {
     [DbContext(typeof(CampingPlatformContext))]
-    partial class CampingPlatformContextModelSnapshot : ModelSnapshot
+    [Migration("20200425113050_TestMigration2")]
+    partial class TestMigration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

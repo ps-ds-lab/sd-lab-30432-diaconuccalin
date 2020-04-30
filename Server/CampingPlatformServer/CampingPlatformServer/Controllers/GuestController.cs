@@ -1,147 +1,92 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using CampingPlatformServer.Model;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+﻿using CampingPlatformServer.Model;
+using CampingPlatformServer.Model.Repository;
+using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace CampingPlatformServer.Controllers
 {
-    public class GuestController : Controller
+    [Route("api/guests")]
+    [ApiController]
+    public class GuestController : ControllerBase
     {
-        private readonly CampingPlatformContext _context;
+        private readonly IDataRepository<Guest> _dataRepository;
 
-        public GuestController(CampingPlatformContext context)
+        public GuestController(IDataRepository<Guest> dataRepository)
         {
-            _context = context;
+            _dataRepository = dataRepository;
         }
 
-        [Authorize]
-        public async Task<IActionResult> Index()
+        // GET: api/Guest
+        [HttpGet]
+        public IActionResult Get()
         {
-            var guests = await _context.Guests.ToListAsync();
-            return View(guests);
+            IEnumerable<Guest> guests = _dataRepository.GetAll();
+            return Ok(guests);
         }
 
-        [Authorize]
-        public async Task<IActionResult> Details(Guid? id)
+        // GET: api/Guest/5
+        [HttpGet("{id}", Name = "GetGuest")]
+        public IActionResult Get(Guid id)
         {
-            if (id == null)
+            Guest guest = _dataRepository.Get(id);
+
+            if(guest == null)
             {
-                return NotFound();
+                return NotFound("The Guest record couldn't be found.");
             }
 
-            var guest = await _context.Guests
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (guest == null)
-            {
-                return NotFound();
-            }
-
-            return View(guest);
+            return Ok(guest);
         }
 
-        [Authorize]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
+        // POST: api/Guest
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DateOfBirth,TelephoneNumber,Email,ProfilePictureLocation,Description")] Guest guest)
+        public IActionResult Post([FromBody] Guest guest)
         {
-            if (ModelState.IsValid)
+            if(guest == null)
             {
-                _context.Add(guest);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Guest is null.");
             }
-            return View(guest);
+
+            _dataRepository.Add(guest);
+            return CreatedAtRoute(
+                "",
+                new { Id = guest.Id },
+                guest);
         }
 
-        [Authorize]
-        public async Task<IActionResult> Edit(Guid? id)
+        // PUT: api/Guest/5
+        [HttpPut("{id}")]
+        public IActionResult Put(Guid id, [FromBody] Guest guest)
         {
-            if (id == null)
+            if(guest == null)
             {
-                return NotFound();
+                return BadRequest("Guest is null.");
             }
 
-            var guest = await _context.Guests.FindAsync(id);
-            if (guest == null)
+            Guest guestToUpdate = _dataRepository.Get(id);
+            if(guestToUpdate == null)
             {
-                return NotFound();
+                return NotFound("The guest record couldn't be found.");
             }
-            return View(guest);
+
+            _dataRepository.Update(guestToUpdate, guest);
+            return NoContent();
         }
 
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,DateOfBirth,TelephoneNumber,Email,ProfilePictureLocation,Description")] Guest guest)
+        // DELETE: api/Guest/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
         {
-            if (id != guest.Id)
+            Guest guest = _dataRepository.Get(id);
+
+            if(guest == null)
             {
-                return NotFound();
+                return NotFound("The guest record couldn't be found.");
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(guest);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GuestExists(guest.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(guest);
-        }
-
-        [Authorize]
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var guest = await _context.Guests
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (guest == null)
-            {
-                return NotFound();
-            }
-
-            return View(guest);
-        }
-
-        [Authorize]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var guest = await _context.Guests.FindAsync(id);
-            _context.Guests.Remove(guest);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool GuestExists(Guid id)
-        {
-            return _context.Guests.Any(e => e.Id == id);
+            _dataRepository.Delete(guest);
+            return NoContent();
         }
     }
 }

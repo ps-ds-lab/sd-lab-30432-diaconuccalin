@@ -18,11 +18,6 @@ namespace CampingPlatformServer.Model
         [Required(ErrorMessage = "Phone required")]
         public string TelephoneNumber { get; set; }
 
-        [EmailAddress(ErrorMessage = "Wrong email format")]
-        [Required(ErrorMessage = "Email required")]
-        [StringLength(60, ErrorMessage = "Email address can't be longer than 60 characters")]
-        public string Email { get; set; }
-
         public string ProfilePictureLocation { get; set; }
         
         public ICollection<Location> Locations { get; set; }
@@ -31,7 +26,6 @@ namespace CampingPlatformServer.Model
         {
             this.DateOfBirth = host.DateOfBirth;
             this.TelephoneNumber = host.TelephoneNumber;
-            this.Email = host.Email;
             this.ProfilePictureLocation = host.ProfilePictureLocation;
             this.Locations = host.Locations;
         }
