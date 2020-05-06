@@ -1,19 +1,17 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
  
-import Login from './Login';
 import Home from './Home';
- 
-import PrivateRoute from './utils/PrivateRoute';
-import PublicRoute from './utils/PublicRoute';
-import Guests from './Guests';
-import Hosts from './Hosts';
-import CreateHost from './CreateHost';
-import DetailsHost from './DetailsHost';
-import EditHost from './EditHost';
+import Login from './login/Login';
+import PrivateRoute from './login/PrivateRoute';
+import PublicRoute from './login/PublicRoute';
+import { getUser, removeUserSession } from './login/Common';
+import Guests from './guest/Guests';
+import Hosts from './host/Hosts';
+import CreateHost from './host/CreateHost';
+import DetailsHost from './host/DetailsHost';
+import EditHost from './host/EditHost';
 
-import { getUser, removeUserSession } from './utils/Common';
- 
 function App() { 
   const user = getUser();
 
@@ -21,6 +19,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <div>
+          
           <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
               <div class="container">
@@ -49,19 +48,24 @@ function App() {
               </div>
             </nav>
           </header>
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <PublicRoute path="/login" component={Login} />
-              <PrivateRoute path="/guests" component={Guests} />
-              <PrivateRoute path="/hosts/detail" component={DetailsHost} />
-              <PrivateRoute path="/hosts/create" component={CreateHost} />
-              <PrivateRoute path="/hosts/edit" component={EditHost} />
-              <PrivateRoute path="/hosts" component={Hosts} />
-            </Switch>
+
+          <Switch>
+            <Route exact path="/" component={Home} />
+            
+            <PublicRoute path="/login" component={Login} />
+
+            <PrivateRoute path="/guests" component={Guests} />
+            <PrivateRoute path="/hosts/detail" component={DetailsHost} />
+            <PrivateRoute path="/hosts/create" component={CreateHost} />
+            <PrivateRoute path="/hosts/edit" component={EditHost} />
+            <PrivateRoute path="/hosts" component={Hosts} />
+          </Switch>
+          
           <footer class="border-top footer text-muted">
             <div class="container">
               © 2020 - CampingPlatform
             </div>
+          
           </footer>
         </div>
       </BrowserRouter>
