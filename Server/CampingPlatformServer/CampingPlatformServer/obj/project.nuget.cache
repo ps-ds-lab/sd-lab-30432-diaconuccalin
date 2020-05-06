@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "1608rKKC/uYuSaPvjZY9U7wIVQgbnE/hJ6JAk07AOxJsRi1tds6QY/mJ8sH2E3hUKnmfzseemE3/wM4h01+HqA==",
+  "dgSpecHash": "QESWeHPFTxEQ3vum8MrCyjxDeFNaJRcFpIArTD1Wl85XsP6S6tV436Qk29xjrwnEc3Iz7BSreJr6lvkB8QS54g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\calin\\Desktop\\uni\\SD\\3\\Server\\CampingPlatformServer\\CampingPlatformServer\\CampingPlatformServer.csproj",
+  "projectFilePath": "C:\\Users\\calin\\Desktop\\uni\\SD\\Actualizat\\sd-lab-30432-diaconuccalin\\Server\\CampingPlatformServer\\CampingPlatformServer\\CampingPlatformServer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\calin\\.nuget\\packages\\automapper\\9.0.0\\automapper.9.0.0.nupkg.sha512",
     "C:\\Users\\calin\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\6.1.1\\automapper.extensions.microsoft.dependencyinjection.6.1.1.nupkg.sha512",

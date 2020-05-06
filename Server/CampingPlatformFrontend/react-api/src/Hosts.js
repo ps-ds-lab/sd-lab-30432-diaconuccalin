@@ -1,17 +1,29 @@
 import React, { Component } from 'react';
+import { getToken } from './utils/Common';
+import { loadEdit } from './HostsCommands';
+import DeleteHostModal from './DeleteHostModal';
 
 class Hosts extends Component {
     state = {
-        hosts: []
+        hosts: [],
+        token: getToken()
     }
 
     componentDidMount() {
-        fetch('http://localhost:5000/api/hosts')
+        const requestOptions = {
+            headers: { 'Authorization': 'Bearer ' + this.state.token }
+        };
+
+        fetch('http://localhost:5000/api/hosts', requestOptions)
         .then(res => res.json())
         .then((data) => {
             this.setState({ hosts: data })
         })
         .catch(console.log)
+    }
+
+    loadDetails(id) {
+        window.location.href = "/hosts/detail?id=" + id;
     }
 
     render() {
@@ -24,20 +36,23 @@ class Hosts extends Component {
                 </div>
                 <div class="row">
                     <div class="col">
-                        <a href="\createHost">Create new</a>
+                        <a href="/hosts/create">Create new</a>
                     </div>
                 </div>
                 <br></br>
                 {this.state.hosts.map((host) => (
-                    <div class = "card">
+                    <div class = "card mb-4">
                         <div class = "card-body">
                             <h5 class="card-title">{host.id}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">{host.dateOfBirth}</h6>
                             <p class="card-text">{host.telephoneNumber}</p>
-                            <a href="\">Details</a> <a href="\">Edit</a> <a href="\">Delete</a>
+                                <button type="button" class="btn btn-primary mr-1 mt-2" onClick={()=>this.loadDetails(host.id)} >Details</button>
+                                <button type="button" class="btn btn-primary mr-1 mt-2" onClick={()=>loadEdit(host.id)}>Edit</button>
+                                <DeleteHostModal hostID={ host.id }/>
                         </div>
                     </div>
                 ))}
+                <br></br>
             </div>
         );
     }

@@ -9,6 +9,8 @@ import PublicRoute from './utils/PublicRoute';
 import Guests from './Guests';
 import Hosts from './Hosts';
 import CreateHost from './CreateHost';
+import DetailsHost from './DetailsHost';
+import EditHost from './EditHost';
 
 import { getUser, removeUserSession } from './utils/Common';
  
@@ -51,8 +53,10 @@ function App() {
               <Route exact path="/" component={Home} />
               <PublicRoute path="/login" component={Login} />
               <PrivateRoute path="/guests" component={Guests} />
+              <PrivateRoute path="/hosts/detail" component={DetailsHost} />
+              <PrivateRoute path="/hosts/create" component={CreateHost} />
+              <PrivateRoute path="/hosts/edit" component={EditHost} />
               <PrivateRoute path="/hosts" component={Hosts} />
-              <PrivateRoute path="/createHost" component={CreateHost} />
             </Switch>
           <footer class="border-top footer text-muted">
             <div class="container">

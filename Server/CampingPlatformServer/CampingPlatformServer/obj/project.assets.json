@@ -7415,11 +7415,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\calin\\Desktop\\uni\\SD\\3\\Server\\CampingPlatformServer\\CampingPlatformServer\\CampingPlatformServer.csproj",
+      "projectUniqueName": "C:\\Users\\calin\\Desktop\\uni\\SD\\Actualizat\\sd-lab-30432-diaconuccalin\\Server\\CampingPlatformServer\\CampingPlatformServer\\CampingPlatformServer.csproj",
       "projectName": "CampingPlatformServer",
-      "projectPath": "C:\\Users\\calin\\Desktop\\uni\\SD\\3\\Server\\CampingPlatformServer\\CampingPlatformServer\\CampingPlatformServer.csproj",
+      "projectPath": "C:\\Users\\calin\\Desktop\\uni\\SD\\Actualizat\\sd-lab-30432-diaconuccalin\\Server\\CampingPlatformServer\\CampingPlatformServer\\CampingPlatformServer.csproj",
       "packagesPath": "C:\\Users\\calin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\calin\\Desktop\\uni\\SD\\3\\Server\\CampingPlatformServer\\CampingPlatformServer\\obj\\",
+      "outputPath": "C:\\Users\\calin\\Desktop\\uni\\SD\\Actualizat\\sd-lab-30432-diaconuccalin\\Server\\CampingPlatformServer\\CampingPlatformServer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\calin\\AppData\\Roaming\\NuGet\\NuGet.Config",

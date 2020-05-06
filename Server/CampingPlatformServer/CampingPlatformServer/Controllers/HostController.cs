@@ -1,5 +1,6 @@
 ﻿using CampingPlatformServer.Model;
 using CampingPlatformServer.Model.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ namespace CampingPlatformServer.Controllers
 {
     [Route("api/hosts")]
     [ApiController]
+    [Authorize]
     public class HostController : ControllerBase
     {
         private readonly IDataRepository<Host> _dataRepository;
