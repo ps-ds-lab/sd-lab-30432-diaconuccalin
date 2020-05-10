@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CampingPlatformServer.Helpers;
+using System;
 
 namespace CampingPlatformServer.Model.Users
 {
@@ -9,5 +10,6 @@ namespace CampingPlatformServer.Model.Users
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
+        public string Role { get; set; }
     }
 }

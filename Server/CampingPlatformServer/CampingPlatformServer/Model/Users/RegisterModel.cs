@@ -18,5 +18,7 @@ namespace CampingPlatformServer.Model.Users
 
         [Required]
         public string Password { get; set; }
+        [Required]
+        public string Role { get; set; }
     }
 }

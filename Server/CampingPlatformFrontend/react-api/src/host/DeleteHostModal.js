@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 
-import { getToken } from '../login/Common';
+import { getToken } from '../utils/Common';
 
 function DeleteHostModal({ hostID: hostid, ...rest }) {
     const [show, setShow] = useState(false);

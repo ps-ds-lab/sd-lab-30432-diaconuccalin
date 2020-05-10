@@ -12,6 +12,7 @@ using CampingPlatformServer.Model.Users;
 using CampingPlatformServer.Services;
 using CampingPlatformServer.Helpers;
 using CampingPlatformServer.Model;
+using Microsoft.AspNetCore.Identity;
 
 namespace CampingPlatformServer.Controllers
 {
@@ -49,9 +50,10 @@ namespace CampingPlatformServer.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role)
                 }),
-                Expires = DateTime.UtcNow.AddDays(30),
+                Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -62,17 +64,19 @@ namespace CampingPlatformServer.Controllers
                 Id = user.Id,
                 Username = user.Username,
                 Firstname = user.FirstName,
-                LastName = user.LastName,
+                Lastname = user.LastName,
                 Email = user.Email,
+                Role = user.Role,
                 Token = tokenString
             });
         }
 
         [AllowAnonymous]
-        [HttpPost("register")]
+        [HttpPost("registerAdmin")]
         public IActionResult Register([FromBody]RegisterModel model)
         {
             var user = _mapper.Map<User>(model);
+            user.Role = Role.Admin;
 
             try
             {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Redirect, useHistory } from 'react-router-dom';
 
-import { getToken } from './Common';
+import { getToken } from '../utils/Common';
 
 function PrivateRoute({ component: Component, path: Path, ...rest }) {
     const history = useHistory();

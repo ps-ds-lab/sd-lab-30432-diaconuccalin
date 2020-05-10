@@ -1,16 +1,17 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
  
-import Home from './Home';
-import Login from './login/Login';
-import PrivateRoute from './login/PrivateRoute';
-import PublicRoute from './login/PublicRoute';
-import { getUser, removeUserSession } from './login/Common';
+import Welcome from './Welcome';
+import Login from './adminLogin/Login';
+import PrivateRoute from './utils/PrivateRoute';
+import PublicRoute from './utils/PublicRoute';
+import { getUser, removeUserSession } from './utils/Common';
 import Guests from './guest/Guests';
 import Hosts from './host/Hosts';
 import CreateHost from './host/CreateHost';
 import DetailsHost from './host/DetailsHost';
 import EditHost from './host/EditHost';
+import Home from './Home.js';
 
 function App() { 
   const user = getUser();
@@ -23,7 +24,7 @@ function App() {
           <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
               <div class="container">
-                <a class="navbar-brand" href="/">Camping Platform</a>
+                <a class="navbar-brand" href={user ? "/" : "/welcome"}>Camping Platform</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
@@ -50,10 +51,10 @@ function App() {
           </header>
 
           <Switch>
-            <Route exact path="/" component={Home} />
-            
+            <PublicRoute path="/welcome" component={Welcome} />
             <PublicRoute path="/login" component={Login} />
 
+            <PrivateRoute exact path="/" component={Home} />
             <PrivateRoute path="/guests" component={Guests} />
             <PrivateRoute path="/hosts/detail" component={DetailsHost} />
             <PrivateRoute path="/hosts/create" component={CreateHost} />

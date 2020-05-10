@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import { setUserSession } from './Common'
+import { setUserSession } from '../utils/Common'
 
 function Login(props) {
     const username = useFormInput('');

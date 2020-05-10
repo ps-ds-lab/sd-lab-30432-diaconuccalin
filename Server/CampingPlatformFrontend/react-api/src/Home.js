@@ -1,8 +1,8 @@
 import React from 'react';
 
-function Home() {
+function Welcome() {
     return (
-        <div class="container">
+        <div class="container align-middle">
             <main role="main" class="pb-3">
                 <div class="text-center">
                     <h1 class="display-4">Welcome</h1>
@@ -12,4 +12,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default Welcome;

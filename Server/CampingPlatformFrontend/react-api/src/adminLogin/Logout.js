@@ -1,4 +1,4 @@
-import { removeUserSession } from './Common';
+import { removeUserSession } from '../utils/Common';
 
 function Logout(props) {
     const handleLogout = () => {

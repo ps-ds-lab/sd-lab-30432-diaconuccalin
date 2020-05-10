@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getToken } from '../login/Common';
+import { getToken } from '../utils/Common';
 import DeleteHostModal from './DeleteHostModal';
 
 class EditHost extends React.Component {
