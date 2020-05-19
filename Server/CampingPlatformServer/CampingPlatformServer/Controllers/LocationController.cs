@@ -1,8 +1,11 @@
-﻿using CampingPlatformServer.Model;
+﻿using CampingPlatformServer.Helpers;
+using CampingPlatformServer.Model;
 using CampingPlatformServer.Model.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CampingPlatformServer.Controllers
 {
@@ -19,13 +22,32 @@ namespace CampingPlatformServer.Controllers
 
         // GET: api/Location
         [HttpGet]
+        [Authorize]
         public IActionResult Get()
         {
             IEnumerable<Location> locations = _dataRepository.GetAll();
             return Ok(locations);
         }
 
+        [Authorize]
+        [HttpGet("getByHost/{id}")]
+        public IActionResult GetByHost(Guid id)
+        {
+            IEnumerable<Location> locations = _dataRepository.GetAll();
+            List<Location> locationsList = new List<Location>();
+
+            foreach (Location location in locations)
+            {
+                if (location.HostId == id)
+                    locationsList.Add(location);
+            }
+
+            locations = locationsList;
+            return Ok(locations);
+        }
+
         // GET: api/Location/5
+        [Authorize]
         [HttpGet("{id}", Name = "GetLocation")]
         public IActionResult Get(Guid id)
         {
@@ -40,6 +62,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // POST: api/Location
+        [Authorize(Roles = Role.Host)]
         [HttpPost]
         public IActionResult Post([FromBody] Location location)
         {
@@ -56,6 +79,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // PUT: api/Location/5
+        [Authorize(Roles = Role.Host)]
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody] Location location)
         {
@@ -75,6 +99,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // DELETE: api/Location/5
+        [Authorize(Roles = Role.Host)]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

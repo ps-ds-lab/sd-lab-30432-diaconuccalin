@@ -1,5 +1,7 @@
-﻿using CampingPlatformServer.Model;
+﻿using CampingPlatformServer.Helpers;
+using CampingPlatformServer.Model;
 using CampingPlatformServer.Model.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // GET: api/Guest
+        [Authorize]
         [HttpGet]
         public IActionResult Get()
         {
@@ -26,6 +29,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // GET: api/Guest/5
+        [Authorize]
         [HttpGet("{id}", Name = "GetGuest")]
         public IActionResult Get(Guid id)
         {
@@ -40,6 +44,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // POST: api/Guest
+        [Authorize(Roles = Role.Guest)]
         [HttpPost]
         public IActionResult Post([FromBody] Guest guest)
         {
@@ -56,6 +61,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // PUT: api/Guest/5
+        [Authorize(Roles = Role.Guest)]
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody] Guest guest)
         {
@@ -75,6 +81,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // DELETE: api/Guest/5
+        [Authorize(Roles = Role.Guest + "," + Role.Admin)]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

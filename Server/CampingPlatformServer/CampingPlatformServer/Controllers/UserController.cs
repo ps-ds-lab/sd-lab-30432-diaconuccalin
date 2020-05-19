@@ -13,29 +13,35 @@ using CampingPlatformServer.Services;
 using CampingPlatformServer.Helpers;
 using CampingPlatformServer.Model;
 using Microsoft.AspNetCore.Identity;
+using CampingPlatformServer.Model.Repository;
+using System.Diagnostics;
 
 namespace CampingPlatformServer.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/users")]
     public class UserController : ControllerBase
     {
         private IUserService _userService;
+        private IDataRepository<Host> _hostRepo;
+        private IDataRepository<Location> _locationRepo;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UserController(
             IUserService userService,
+            IDataRepository<Location> locationRepo,
+            IDataRepository<Host> hostRepo,
             IMapper mapper,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;
+            _locationRepo = locationRepo;
+            _hostRepo = hostRepo;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
 
-        [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]AuthenticateModel model)
         {
@@ -67,13 +73,14 @@ namespace CampingPlatformServer.Controllers
                 Lastname = user.LastName,
                 Email = user.Email,
                 Role = user.Role,
+                CorrespondingID = user.CorrespondingID,
                 Token = tokenString
             });
         }
 
-        [AllowAnonymous]
+        //[Authorize(Roles = Role.Admin)]
         [HttpPost("registerAdmin")]
-        public IActionResult Register([FromBody]RegisterModel model)
+        public IActionResult RegisterAdmin([FromBody]RegisterModel model)
         {
             var user = _mapper.Map<User>(model);
             user.Role = Role.Admin;
@@ -89,6 +96,41 @@ namespace CampingPlatformServer.Controllers
             }
         }
 
+        [HttpPost("registerHost")]
+        public IActionResult RegisterHost([FromBody]RegisterModel model)
+        {
+            var user = _mapper.Map<User>(model);
+            user.Role = Role.Host;
+
+            try
+            {
+                _userService.Create(user, model.Password);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("registerGuest")]
+        public IActionResult RegisterGuest([FromBody]RegisterModel model)
+        {
+            var user = _mapper.Map<User>(model);
+            user.Role = Role.Guest;
+
+            try
+            {
+                _userService.Create(user, model.Password);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        //[Authorize(Roles = Role.Admin)]
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -98,6 +140,7 @@ namespace CampingPlatformServer.Controllers
             return Ok(model);
         }
 
+        //[Authorize(Roles = Role.Admin)]
         [HttpGet("{id}")]
         public IActionResult GetById(Guid id)
         {
@@ -107,6 +150,7 @@ namespace CampingPlatformServer.Controllers
             return Ok(model);
         }
 
+        //[Authorize(Roles = Role.Admin)]
         [HttpPut("{id}")]
         public IActionResult Update(Guid id, [FromBody]UpdateModel model)
         {
@@ -124,9 +168,30 @@ namespace CampingPlatformServer.Controllers
             }
         }
 
+        //[Authorize(Roles = Role.Admin)]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
+            var user = _userService.GetById(id);
+
+            if (user.Role == "Host")
+            {
+                var host = _hostRepo.Get(user.CorrespondingID);
+
+                var locations = _locationRepo.GetAll();
+                foreach (Location location in locations)
+                {
+                    if (location.HostId == id)
+                    {
+                        var toDel = _locationRepo.Get(location.Id);
+                        _locationRepo.Delete(toDel);
+                    }
+                }
+
+                if(host != null)
+                    _hostRepo.Delete(host);
+            }
+
             _userService.Delete(id);
             return Ok();
         }

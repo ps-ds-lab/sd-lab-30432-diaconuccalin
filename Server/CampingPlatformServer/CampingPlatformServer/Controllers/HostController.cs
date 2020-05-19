@@ -10,7 +10,6 @@ namespace CampingPlatformServer.Controllers
 {
     [Route("api/hosts")]
     [ApiController]
-    [Authorize(Roles = Role.Admin)]
     public class HostController : ControllerBase
     {
         private readonly IDataRepository<Host> _dataRepository;
@@ -21,6 +20,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // GET: api/Host
+        [Authorize]
         [HttpGet]
         public IActionResult Get()
         {
@@ -29,6 +29,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // GET: api/Host/5
+        [Authorize]
         [HttpGet("{id}", Name = "GetHost")]
         public IActionResult Get(Guid id)
         {
@@ -59,6 +60,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // PUT: api/Host/5
+        [Authorize(Roles = Role.Host + "," + Role.Admin)]
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody] Host host)
         {
@@ -78,6 +80,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // DELETE: api/Host/5
+        [Authorize(Roles = Role.Host + "," + Role.Admin)]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

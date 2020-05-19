@@ -12,10 +12,10 @@ namespace CampingPlatformServer.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [ForeignKey(nameof(Host))]
+        [ForeignKey(nameof(User))]
         public Guid HostId { get; set; }
 
-        public Host Host;
+        public User User;
 
         [Required(ErrorMessage = "Maximum number of guests required")]
         public int MaxNoGuests { get; set; }
@@ -27,6 +27,8 @@ namespace CampingPlatformServer.Model
         [StringLength(400, ErrorMessage = "Description can't be longer than 400 characters")]
         public string Description { get; set; }
 
+        public string Days { get; set; }
+
         public ICollection<GuestRequest> GuestRequests { get; set; }
 
         public ICollection<LocationDate> LocationDates { get; set; }
@@ -36,13 +38,14 @@ namespace CampingPlatformServer.Model
         public void Copy(Location location)
         {
             this.HostId = location.HostId;
-            this.Host = location.Host;
+            this.User = location.User;
             this.MaxNoGuests = location.MaxNoGuests;
             this.PhysicalAddress = location.PhysicalAddress;
             this.Description = location.Description;
             this.GuestRequests = location.GuestRequests;
             this.LocationDates = location.LocationDates;
             this.LocationImages = location.LocationImages;
+            this.Days = location.Days;
         }
     }
 }

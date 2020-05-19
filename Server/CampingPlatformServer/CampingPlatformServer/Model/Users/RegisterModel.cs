@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace CampingPlatformServer.Model.Users
 {
@@ -18,7 +19,7 @@ namespace CampingPlatformServer.Model.Users
 
         [Required]
         public string Password { get; set; }
-        [Required]
         public string Role { get; set; }
+        public Guid CorrespondingID { get; set; }
     }
 }

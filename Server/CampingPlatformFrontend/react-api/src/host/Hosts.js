@@ -22,10 +22,6 @@ class Hosts extends Component {
         .catch(console.log)
     }
 
-    loadDetails(id) {
-        window.location.href = "/hosts/detail?id=" + id;
-    }
-
     render() {
         return(
             <div class="container">
@@ -46,7 +42,7 @@ class Hosts extends Component {
                             <h5 class="card-title">{host.id}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">{host.dateOfBirth}</h6>
                             <p class="card-text">{host.telephoneNumber}</p>
-                            <button type="button" class="btn btn-primary mr-1 mt-2" onClick={()=>this.loadDetails(host.id)} >Details</button>
+                            <button type="button" class="btn btn-primary mr-1 mt-2" onClick={()=>window.location.href = "/hosts/detail?id=" + host.id} >Details</button>
                             <button type="button" class="btn btn-primary mr-1 mt-2" onClick={()=>window.location.href = "/hosts/edit?id=" + host.id}>Edit</button>
                             <DeleteHostModal hostID={ host.id }/>
                         </div>

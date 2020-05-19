@@ -17,8 +17,8 @@ function Welcome() {
                     </div>
                     <div class="col">
                         <p class="lead">New here?</p>
-                        <button type="button" class="btn btn-primary">Register as Host</button><br/>
-                        <button type="button" class="btn btn-primary mt-2">Register as Guest</button>
+                        <a href="/hostRegister"><button type="button" class="btn btn-primary">Register as Host</button></a><br/>
+                        <a href="/guestRegister"><button type="button" class="btn btn-primary mt-2">Register as Guest</button></a>
                     </div>
                 </div>
                 </div>

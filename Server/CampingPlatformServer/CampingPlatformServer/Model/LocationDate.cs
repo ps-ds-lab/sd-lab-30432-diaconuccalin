@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CampingPlatformServer.Helpers;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CampingPlatformServer.Model
 {
@@ -19,13 +17,13 @@ namespace CampingPlatformServer.Model
 
         public Location Location { get; set; }
 
-        public DateTime Date { get; set; }
+        public string Day { get; set; }
 
         public void Copy(LocationDate locationDate)
         {
             this.LocationId = locationDate.LocationId;
             this.Location = locationDate.Location;
-            this.Date = locationDate.Date;
+            this.Day = locationDate.Day;
         }
     }
 }

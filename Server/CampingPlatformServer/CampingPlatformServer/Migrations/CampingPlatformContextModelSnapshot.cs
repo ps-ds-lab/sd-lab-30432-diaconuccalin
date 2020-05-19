@@ -148,6 +148,9 @@ namespace CampingPlatformServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Days")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(400)")
                         .HasMaxLength(400);
@@ -165,8 +168,6 @@ namespace CampingPlatformServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HostId");
-
                     b.ToTable("Location");
                 });
 
@@ -176,8 +177,8 @@ namespace CampingPlatformServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Day")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");
@@ -213,6 +214,9 @@ namespace CampingPlatformServer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CorrespondingID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
@@ -252,15 +256,6 @@ namespace CampingPlatformServer.Migrations
                     b.HasOne("CampingPlatformServer.Model.Location", "Location")
                         .WithMany("GuestRequests")
                         .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CampingPlatformServer.Model.Location", b =>
-                {
-                    b.HasOne("CampingPlatformServer.Model.Host", null)
-                        .WithMany("Locations")
-                        .HasForeignKey("HostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

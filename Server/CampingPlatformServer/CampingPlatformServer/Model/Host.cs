@@ -19,15 +19,12 @@ namespace CampingPlatformServer.Model
         public string TelephoneNumber { get; set; }
 
         public string ProfilePictureLocation { get; set; }
-        
-        public ICollection<Location> Locations { get; set; }
 
         public void Copy(Host host)
         {
             this.DateOfBirth = host.DateOfBirth;
             this.TelephoneNumber = host.TelephoneNumber;
             this.ProfilePictureLocation = host.ProfilePictureLocation;
-            this.Locations = host.Locations;
         }
     }
 }

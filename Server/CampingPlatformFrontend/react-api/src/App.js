@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch } from 'react-router-dom';
  
 import Welcome from './Welcome';
-import Login from './adminLogin/Login';
+import Login from './login/Login';
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
 import { getUser, removeUserSession } from './utils/Common';
@@ -11,7 +11,13 @@ import Hosts from './host/Hosts';
 import CreateHost from './host/CreateHost';
 import DetailsHost from './host/DetailsHost';
 import EditHost from './host/EditHost';
-import Home from './Home.js';
+import CreateLocation from './host/CreateLocation';
+import Home from './Home';
+import HostRegister from './register/HostRegister';
+import GuestRegister from './register/GuestRegister';
+import DetailsLocation from './host/location/DetailsLocation';
+import EditLocation from './host/location/EditLocation';
+import Account from './Account';
 
 function App() { 
   const user = getUser();
@@ -31,19 +37,11 @@ function App() {
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                   <ul class="navbar-nav">
                       <li class="nav-item">
-                        <div class="nav-link text-dark">{user ? "Hello, " + user.firstname + "!" : ""}</div>
+                        <div class="nav-link text-dark">{user ? "Hello, " : ""}<a class="text-dark" href={user ? "/account" : ""}>{user ? user.firstname : ""}</a>{user ? "!" : ""}</div>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link text-dark" onClick={removeUserSession} href={user ? "/" : "/login"}>{user ? 'Logout' : 'Login'}</a>
+                        <a class="nav-link text-dark" onClick={removeUserSession} href={user ? "/welcome" : "/login"}>{user ? 'Logout' : 'Login'}</a>
                       </li>
-                  </ul>
-                  <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                      <a class="nav-link text-dark" href="/guests">Guests</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link text-dark" href="/hosts">Hosts</a>
-                    </li>
                   </ul>
                 </div>
               </div>
@@ -53,9 +51,16 @@ function App() {
           <Switch>
             <PublicRoute path="/welcome" component={Welcome} />
             <PublicRoute path="/login" component={Login} />
+            <PublicRoute path="/hostRegister" component={HostRegister} />
+            <PublicRoute path="/guestRegister" component={GuestRegister} />
 
+            <PrivateRoute path="/editAccount" component={EditHost} />
+            <PrivateRoute path="/account" component={Account} />
+            <PrivateRoute path="/newLocation" component={CreateLocation} />
             <PrivateRoute exact path="/" component={Home} />
             <PrivateRoute path="/guests" component={Guests} />
+            <PrivateRoute path="/hosts/locationDetail" component={DetailsLocation} />
+            <PrivateRoute path="/hosts/locationEdit" component={EditLocation} />
             <PrivateRoute path="/hosts/detail" component={DetailsHost} />
             <PrivateRoute path="/hosts/create" component={CreateHost} />
             <PrivateRoute path="/hosts/edit" component={EditHost} />
