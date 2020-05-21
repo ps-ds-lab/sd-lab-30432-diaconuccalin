@@ -56,13 +56,16 @@ class EditHost extends React.Component {
         var tn = document.getElementById("phone").value;
         var db = document.getElementById("dob").value;
 
-        var user = getUser();
+        var user = this.state.user;
         user.email = em;
         user.firstname = fn;
         user.lastname = ln;
         user.username = un;
-        removeUserSession();
-        setUserSession(user.token, user, user.role, user.id);
+
+        if(getUser().role === "Host") {
+            removeUserSession();
+            setUserSession(user.token, user, user.role, user.id);
+        }
         
         const requestOptions = {
             method: 'PUT',
@@ -108,10 +111,10 @@ class EditHost extends React.Component {
     render() {
         return(
         <div class="container">
-            <form onSubmit={ this.updateData.bind(this) } action="/account"  >
+            <form onSubmit={ this.updateData.bind(this) } action={getUser().role==="Admin" ? "/hosts" : "/account"}  >
             <div class="container align-middle">
                 <div class="row justify-content-center align-items-center mb-2">
-                    <h1>Edit Host Account</h1>
+                    <h1>Edit {getUser().role==="Admin" ? "Host" : "Account"}</h1>
                 </div>
                 <div class="row justify-content-center align-items-center">
                     <div class = "col-2">

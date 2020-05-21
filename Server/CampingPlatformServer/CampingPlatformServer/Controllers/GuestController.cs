@@ -44,7 +44,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // POST: api/Guest
-        [Authorize(Roles = Role.Guest)]
+        //[Authorize(Roles = Role.Guest)]
         [HttpPost]
         public IActionResult Post([FromBody] Guest guest)
         {

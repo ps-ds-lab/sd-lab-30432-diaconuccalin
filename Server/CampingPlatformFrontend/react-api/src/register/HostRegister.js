@@ -40,7 +40,7 @@ function HostRegister() {
                     })
                     .then(response => {
                         setLoading(false);
-                        window.location.href='/newLocation';
+                        window.location.href='/';
                     })
                     .catch(error => {
                         setLoading(false);

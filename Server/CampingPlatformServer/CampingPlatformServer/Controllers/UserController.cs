@@ -24,6 +24,7 @@ namespace CampingPlatformServer.Controllers
     {
         private IUserService _userService;
         private IDataRepository<Host> _hostRepo;
+        private IDataRepository<Guest> _guestRepo;
         private IDataRepository<Location> _locationRepo;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
@@ -32,12 +33,14 @@ namespace CampingPlatformServer.Controllers
             IUserService userService,
             IDataRepository<Location> locationRepo,
             IDataRepository<Host> hostRepo,
+            IDataRepository<Guest> guestRepo,
             IMapper mapper,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;
             _locationRepo = locationRepo;
             _hostRepo = hostRepo;
+            _guestRepo = guestRepo;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -190,6 +193,13 @@ namespace CampingPlatformServer.Controllers
 
                 if(host != null)
                     _hostRepo.Delete(host);
+            }
+
+            if(user.Role == "Guest")
+            {
+                var guest = _guestRepo.Get(user.CorrespondingID);
+                if (guest != null)
+                    _guestRepo.Delete(guest);
             }
 
             _userService.Delete(id);

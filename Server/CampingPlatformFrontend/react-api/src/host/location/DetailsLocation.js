@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { getToken } from '../../utils/Common';
+import { getToken, getUser } from '../../utils/Common';
 import DeleteLocationModal from './DeleteLocationModal';
+import InquireLocationModal from '../../guest/InquireLocationModal'
 
 class DetailsLocation extends React.Component {
     state = {
@@ -27,18 +28,32 @@ class DetailsLocation extends React.Component {
     }
 
     render() {
-        return(
-            <div class="container">
-                <h1>Location details</h1><br/>
-                <p class="card-text"><b>Maximum number of guests:</b> {this.state.location.maxNoGuests}</p>
-                <p class="card-text"><b>Available days:</b> {this.state.location.days && this.state.location.days.includes("FRI") ? "Friday " : ""}{this.state.location.days && this.state.location.days.includes("SAT") ? "Saturday " : ""}{this.state.location.days && this.state.location.days.includes("SUN") ? "Sunday" : ""}</p>
-                <p class="card-text"><b>Address:</b> {this.state.location.physicalAddress}</p>
-                <p class="card-text"><b>Description:</b> {this.state.location.description}</p>
-
-                <button type="button" class="btn btn-primary mr-1 mt-2" onClick={()=>window.location.href = "/hosts/locationEdit?id=" + this.state.location.id}>Edit</button>
-                <DeleteLocationModal locationID={ this.state.location.id }/>
-            </div>
-        )
+        if(getUser().role === "Host") {
+            return(
+                <div class="container">
+                    <h1>Location details</h1><br/>
+                    <p class="card-text"><b>Maximum number of guests:</b> {this.state.location.maxNoGuests}</p>
+                    <p class="card-text"><b>Available days:</b> {this.state.location.days && this.state.location.days.includes("FRI") ? "Friday " : ""}{this.state.location.days && this.state.location.days.includes("SAT") ? "Saturday " : ""}{this.state.location.days && this.state.location.days.includes("SUN") ? "Sunday" : ""}</p>
+                    <p class="card-text"><b>Address:</b> {this.state.location.physicalAddress}</p>
+                    <p class="card-text"><b>Description:</b> {this.state.location.description}</p>
+    
+                    <button type="button" class="btn btn-primary mr-1 mt-2" onClick={()=>window.location.href = "/hosts/locationEdit?id=" + this.state.location.id}>Edit</button>
+                    <DeleteLocationModal locationID={ this.state.location.id }/>
+                </div>
+            )
+        } else if(getUser().role === "Guest") {
+            return(
+                <div class="container">
+                    <h1>Location details</h1><br/>
+                    <p class="card-text"><b>Maximum number of guests:</b> {this.state.location.maxNoGuests}</p>
+                    <p class="card-text"><b>Available days:</b> {this.state.location.days && this.state.location.days.includes("FRI") ? "Friday " : ""}{this.state.location.days && this.state.location.days.includes("SAT") ? "Saturday " : ""}{this.state.location.days && this.state.location.days.includes("SUN") ? "Sunday" : ""}</p>
+                    <p class="card-text"><b>Address:</b> {this.state.location.physicalAddress}</p>
+                    <p class="card-text"><b>Description:</b> {this.state.location.description}</p>
+                    
+                    <InquireLocationModal locationID={ this.state.location.id }/>
+                </div>
+            )
+        }
     }
 }
 

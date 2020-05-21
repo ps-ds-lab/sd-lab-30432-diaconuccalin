@@ -5,6 +5,7 @@ import DeleteHostModal from './DeleteHostModal';
 
 class DetailsHost extends React.Component {
     state = {
+        user: [],
         host: [],
         token: getToken()
     }
@@ -18,10 +19,17 @@ class DetailsHost extends React.Component {
             headers: { 'Authorization': 'Bearer ' + this.state.token }
         };
 
-        fetch('http://localhost:5000/api/hosts/' + id, requestOptions)
+        fetch('http://localhost:5000/api/users/' + id, requestOptions)
         .then(res => res.json())
         .then((data) => {
-            this.setState({ host: data });
+            this.setState({ user: data });
+            
+            fetch('http://localhost:5000/api/hosts/' + this.state.user.correspondingID, requestOptions)
+            .then(res => res.json())
+            .then((data) => {
+                this.setState({ host: data });
+            })
+            .catch(console.log)
         })
         .catch(console.log)
     }
@@ -30,16 +38,17 @@ class DetailsHost extends React.Component {
         return(
             <div class="container">
                 <h1>Details</h1>
-                <h4>{this.state.host.id}</h4>
                 <div class = "card">
                     <div class = "card-body">
-                        <h5 class="card-title">{this.state.host.id}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{this.state.host.dateOfBirth}</h6>
-                        <p class="card-text">{this.state.host.telephoneNumber}</p>        
+                        <h5 class="card-title">{this.state.user.firstName} {this.state.user.lastName}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Username: {this.state.user.username}</h6>
+                        <div class="card-text">Email: {this.state.user.email}</div>
+                        <div class="card-text">Phone number: {this.state.host.telephoneNumber}</div>
+                        <div class="card-text">Date of birth: {this.state.host.dateOfBirth}</div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary mr-1 mt-2" onClick={ ()=>window.location.href = "/hosts/edit?id=" + this.state.host.id } >Edit</button>
-                <DeleteHostModal hostID={ this.state.host.id }/>
+                <button type="button" class="btn btn-primary mr-1 mt-2" onClick={ ()=>window.location.href = "/hosts/edit?id=" + this.state.user.id } >Edit</button>
+                <DeleteHostModal hostID={ this.state.user.id }/>
             </div>
         )
     }

@@ -17,7 +17,11 @@ import HostRegister from './register/HostRegister';
 import GuestRegister from './register/GuestRegister';
 import DetailsLocation from './host/location/DetailsLocation';
 import EditLocation from './host/location/EditLocation';
+import EditGuest from './guest/EditGuest';
+import EditAdmin from './EditAdmin';
 import Account from './Account';
+import DetailsGuest from './guest/DetailGuest.js'
+import Locations from './host/location/Locations'
 
 function App() { 
   const user = getUser();
@@ -54,17 +58,21 @@ function App() {
             <PublicRoute path="/hostRegister" component={HostRegister} />
             <PublicRoute path="/guestRegister" component={GuestRegister} />
 
-            <PrivateRoute path="/editAccount" component={EditHost} />
+            <PrivateRoute path="/editAccount" component={user ? user.role==="Host" ? EditHost : user.role==="Guest" ? EditGuest : EditAdmin : Welcome} />
             <PrivateRoute path="/account" component={Account} />
             <PrivateRoute path="/newLocation" component={CreateLocation} />
             <PrivateRoute exact path="/" component={Home} />
+            <PrivateRoute path="/guests/detail" component={DetailsGuest} />
+            <PrivateRoute path="/guests/edit" component={EditGuest} />
             <PrivateRoute path="/guests" component={Guests} />
+            <PrivateRoute path="/locationDetail" component={DetailsLocation} />
             <PrivateRoute path="/hosts/locationDetail" component={DetailsLocation} />
             <PrivateRoute path="/hosts/locationEdit" component={EditLocation} />
             <PrivateRoute path="/hosts/detail" component={DetailsHost} />
             <PrivateRoute path="/hosts/create" component={CreateHost} />
             <PrivateRoute path="/hosts/edit" component={EditHost} />
             <PrivateRoute path="/hosts" component={Hosts} />
+            <PrivateRoute path="/locations" component={Locations} />
           </Switch>
           
           <footer class="border-top footer text-muted">

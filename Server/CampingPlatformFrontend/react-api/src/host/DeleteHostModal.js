@@ -41,7 +41,7 @@ function DeleteHostModal({ hostID: hostid, ...rest }) {
           <Modal.Header closeButton>
             <Modal.Title>Delete Confirmation</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Are you sure that you want to delete this host?</Modal.Body>
+          <Modal.Body>Are you sure that you want to delete this account?</Modal.Body>
           <Modal.Footer>
             <button type="button" class="btn btn-danger mr-1 mt-2" onClick={deleteHost} >Delete Account</button>
             <button type="button" class="btn btn-primary mr-1 mt-2" onClick={handleClose} >Cancel</button>

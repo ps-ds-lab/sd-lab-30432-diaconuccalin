@@ -99,7 +99,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // DELETE: api/Location/5
-        [Authorize(Roles = Role.Host)]
+        //[Authorize(Roles = Role.Host)]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
