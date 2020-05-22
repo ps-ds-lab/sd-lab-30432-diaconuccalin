@@ -73,6 +73,7 @@ function App() {
             <PrivateRoute path="/hosts/edit" component={EditHost} />
             <PrivateRoute path="/hosts" component={Hosts} />
             <PrivateRoute path="/locations" component={Locations} />
+            <PrivateRoute path="/guestDetails" component={DetailsGuest} />
           </Switch>
           
           <footer class="border-top footer text-muted">

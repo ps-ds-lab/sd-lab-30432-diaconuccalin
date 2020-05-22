@@ -24,15 +24,12 @@ namespace CampingPlatformServer.Model
         [StringLength(200, ErrorMessage = "Description can't be longer than 200 characters")]
         public string Description { get; set; }
 
-        public ICollection<GuestRequest> GuestRequests { get; set; }
-
         public void Copy(Guest guest)
         {
             this.DateOfBirth = guest.DateOfBirth;
             this.TelephoneNumber = guest.TelephoneNumber;
             this.ProfilePictureLocation = guest.ProfilePictureLocation;
             this.Description = guest.Description;
-            this.GuestRequests = guest.GuestRequests;
         }
     }
 }

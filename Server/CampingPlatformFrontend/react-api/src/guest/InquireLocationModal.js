@@ -1,20 +1,36 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
+import { getUser, getToken } from '../utils/Common';
 
-function InquireLocationModal({ guestID: guestid, ...rest }) {
+function InquireLocationModal({ locationID: locationid, disabled, ...rest }) {
     const [show, setShow] = useState(false);
   
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const inquireLocation = () => {
+        axios
+            .post('http://localhost:5000/api/guestRequests',
+                {
+                    guestId: getUser().id,
+                    locationId: locationid
+                },
+                { 'headers':
+                    { 'Authorization' : 'Bearer ' + getToken() }})
+            .then(response => {
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        
         handleClose();
         window.location.href = "/";
     };
   
     return (
       <>
-        <button type="button" class="btn btn-primary mr-1 mt-2" onClick={handleShow} >I would like to stay in this place</button>
+        <button type="button" class={disabled === "true" ? "btn btn-primary mr-1 mt-2 disabled" : "btn btn-primary mr-1 mt-2"} onClick={disabled === "true" ? handleClose : handleShow}>{disabled === "true" ? "You have already solicited this place" : "I would like to stay in this place"}</button>
   
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>

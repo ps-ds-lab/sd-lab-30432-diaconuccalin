@@ -29,8 +29,8 @@ namespace CampingPlatformServer.Controllers
         }
 
         // GET: api/Host/5
-        [Authorize]
-        [HttpGet("{id}", Name = "GetHost")]
+        //[Authorize]
+        [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
             Host host = _dataRepository.Get(id);
@@ -60,7 +60,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // PUT: api/Host/5
-        [Authorize(Roles = Role.Host + "," + Role.Admin)]
+        //[Authorize(Roles = Role.Host + "," + Role.Admin)]
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody] Host host)
         {
@@ -80,7 +80,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // DELETE: api/Host/5
-        [Authorize(Roles = Role.Host + "," + Role.Admin)]
+        //[Authorize(Roles = Role.Host + "," + Role.Admin)]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

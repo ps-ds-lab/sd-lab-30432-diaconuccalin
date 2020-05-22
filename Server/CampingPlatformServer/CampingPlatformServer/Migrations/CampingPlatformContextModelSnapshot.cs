@@ -86,8 +86,8 @@ namespace CampingPlatformServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
+                    b.Property<bool>("Accepted")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("GuestId")
                         .HasColumnType("uniqueidentifier");
@@ -95,12 +95,7 @@ namespace CampingPlatformServer.Migrations
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("GuestId");
 
                     b.HasIndex("LocationId");
 
@@ -247,13 +242,7 @@ namespace CampingPlatformServer.Migrations
 
             modelBuilder.Entity("CampingPlatformServer.Model.GuestRequest", b =>
                 {
-                    b.HasOne("CampingPlatformServer.Model.Guest", "Guest")
-                        .WithMany("GuestRequests")
-                        .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CampingPlatformServer.Model.Location", "Location")
+                    b.HasOne("CampingPlatformServer.Model.Location", null)
                         .WithMany("GuestRequests")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)

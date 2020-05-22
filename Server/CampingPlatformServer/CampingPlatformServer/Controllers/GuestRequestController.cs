@@ -53,6 +53,8 @@ namespace CampingPlatformServer.Controllers
                 return BadRequest("Guest request is null.");
             }
 
+            guestRequest.Accepted = false;
+
             _dataRepository.Add(guestRequest);
             return CreatedAtRoute(
                 "",
@@ -81,7 +83,7 @@ namespace CampingPlatformServer.Controllers
         }
 
         // DELETE: api/GuestRequest/5
-        [Authorize(Roles = Role.Guest + "," + Role.Admin)]
+        //[Authorize(Roles = Role.Guest + "," + Role.Admin)]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
@@ -94,6 +96,41 @@ namespace CampingPlatformServer.Controllers
 
             _dataRepository.Delete(guestRequest);
             return NoContent();
+        }
+
+        [Authorize]
+        [HttpPut("markAccepted/{id}")]
+        public IActionResult MarkAccepted(Guid id)
+        {
+            GuestRequest guestRequest = _dataRepository.Get(id);
+
+            if (guestRequest == null)
+            {
+                return NotFound("The Guest request record couldn't be found.");
+            }
+
+            GuestRequest guestRequestToUpdate = new GuestRequest(); 
+            guestRequestToUpdate.Copy(guestRequest);
+
+            guestRequestToUpdate.Accepted = true;
+            guestRequest.Accepted = true;
+
+            _dataRepository.Update(guestRequestToUpdate, guestRequest);
+            return NoContent();
+        }
+
+        [HttpGet("getByLocation/{id}")]
+        public IActionResult GetByLocation(Guid id)
+        {
+            IEnumerable<GuestRequest> allGuestRequests = _dataRepository.GetAll();
+            List<GuestRequest> guestRequests = new List<GuestRequest>();
+
+            foreach(GuestRequest guestRequest in allGuestRequests) {
+                if (guestRequest.LocationId == id)
+                    guestRequests.Add(guestRequest);
+            }
+
+            return Ok(guestRequests);
         }
     }
 }
