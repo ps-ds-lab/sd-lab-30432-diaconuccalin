@@ -17,11 +17,19 @@ using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using CampingPlatformServer.Services;
 using AutoMapper;
+using WebSocketManager;
+using System.Net.WebSockets;
+using Microsoft.AspNetCore.Http;
+using System.Threading;
+using System.Collections.Generic;
+using CampingPlatformServer.Hubs;
 
 namespace CampingPlatformServer
 {
     public class Startup
     {
+        List<WebSocket> allWebSockets = new List<WebSocket>();
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,6 +40,9 @@ namespace CampingPlatformServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddWebSocketManager();
+            services.AddSignalR();
+
             services.ConfigureCors();
             services.ConfigureIISIntegration();
             services.AddDbContext<CampingPlatformContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:CampingPlatformDB"]));
@@ -87,10 +98,11 @@ namespace CampingPlatformServer
 
             services.AddScoped<IUserService, UserService>();
             services.AddAutoMapper();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -115,7 +127,51 @@ namespace CampingPlatformServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationsHub>("/notifications");
             });
+
+            app.UseWebSockets();
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path == "/notifications2")
+                {
+                    if (context.WebSockets.IsWebSocketRequest)
+                    {
+                        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                        allWebSockets.Add(webSocket);
+                        await Echo(context, webSocket);
+                    }
+                    else
+                    {
+                        context.Response.StatusCode = 400;
+                    }
+                }
+                else
+                {
+                    await next();
+                }
+
+            });
+        }
+
+        private async Task Echo(HttpContext context, WebSocket webSocket)
+        {
+            var buffer = new byte[1024 * 4];
+            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            while (!result.CloseStatus.HasValue)
+            {
+                await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+
+                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                Console.WriteLine("HEI HEI!");
+                foreach (WebSocket webSocket1 in allWebSockets)
+                {
+                    Console.WriteLine("HEI!");
+                    await webSocket1.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+                }
+            }
+            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         }
     }
 }

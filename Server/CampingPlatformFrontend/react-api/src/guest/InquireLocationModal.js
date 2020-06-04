@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import { getUser, getToken } from '../utils/Common';
+import * as signalR from '@microsoft/signalr';
 
 function InquireLocationModal({ locationID: locationid, disabled, ...rest }) {
     const [show, setShow] = useState(false);
@@ -19,18 +20,44 @@ function InquireLocationModal({ locationID: locationid, disabled, ...rest }) {
                 { 'headers':
                     { 'Authorization' : 'Bearer ' + getToken() }})
             .then(response => {
+                axios.get("http://localhost:5000/api/locations/" + locationid,
+                { 'headers':
+                    { 'Authorization' : 'Bearer ' + getToken() }})
+                .then(response2 => {
+                    var connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5000/notifications",
+                    {
+                        skipNegotiation: true,
+                        transport: signalR.HttpTransportType.WebSockets
+                    }).build();
+
+                    var packet = {
+                        hostId: response2.data.hostId,
+                        locationId: response2.data.id
+                    }
+
+                    connection.start().then(function () {
+                        connection.invoke("SendNotification", JSON.stringify(packet)).catch(function (err) {
+                          return console.error(err.toString());
+                        });
+                        
+                        handleClose();
+                        window.location.href = "/";
+                      }).catch(function (err) {
+                        return console.error(err.toString());
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                })
             })
             .catch(error => {
                 console.log(error);
             });
-        
-        handleClose();
-        window.location.href = "/";
     };
   
     return (
       <>
-        <button type="button" class={disabled === "true" ? "btn btn-primary mr-1 mt-2 disabled" : "btn btn-primary mr-1 mt-2"} onClick={disabled === "true" ? handleClose : handleShow}>{disabled === "true" ? "You have already solicited this place" : "I would like to stay in this place"}</button>
+        <button type="button" class={disabled === "true" ? "btn btn-primary mr-1 mt-2 disabled" : "btn btn-primary mr-1 mt-2"} onClick={disabled === "true" ? handleClose : handleShow} id="sendInquire">{disabled === "true" ? "You have already solicited this place" : "I would like to stay in this place"}</button>
   
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>

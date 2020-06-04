@@ -1,4 +1,5 @@
 ﻿using CampingPlatformServer.Helpers;
+using CampingPlatformServer.Hubs;
 using CampingPlatformServer.Model;
 using CampingPlatformServer.Model.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -13,10 +14,12 @@ namespace CampingPlatformServer.Controllers
     public class GuestRequestController : ControllerBase
     {
         private readonly IDataRepository<GuestRequest> _dataRepository;
+        //private readonly NotificationsHub _notificationsHub;
 
         public GuestRequestController(IDataRepository<GuestRequest> dataRepository)
         {
             _dataRepository = dataRepository;
+            //_notificationsHub = notificationsHub;
         }
 
         // GET: api/GuestRequest
@@ -56,6 +59,7 @@ namespace CampingPlatformServer.Controllers
             guestRequest.Accepted = false;
 
             _dataRepository.Add(guestRequest);
+            //_notificationsHub.SendNotification("S-A FACUT");
             return CreatedAtRoute(
                 "",
                 new { Id = guestRequest.Id },
